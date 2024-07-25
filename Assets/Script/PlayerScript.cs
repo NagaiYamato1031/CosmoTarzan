@@ -16,6 +16,15 @@ public class PlayerScript : MonoBehaviour
 	public float airSpeed;
 	// 空中での最大速度
 	public float MaxAirSpeed;
+	// ジャンプを弱める高度
+	public float MaxHeight;
+	// ジャンプ後に滞空するためのベクトル
+	public float hoveringPower;
+	// 重力の基本値
+	public float Gravity = -9.8f;
+
+
+
 	// 物理演算
 	private Rigidbody rb;
 
@@ -24,70 +33,97 @@ public class PlayerScript : MonoBehaviour
 	[System.Serializable]
 	private struct Flags
 	{
+		// 移動入力しているか
+		[SerializeField]
+		public bool isInputMove;
+		// ジャンプ入力しているか
+		[SerializeField]
+		public bool isInputJump;
 		// 地面についているか
 		[SerializeField]
 		public bool isGround;
+		// ジャンプで上昇中か
+		[SerializeField]
+		public bool isJumping;
 	}
 
 	// まとめた構造体
 	[SerializeField]
 	Flags flags_;
 
+	// 重力ベクトル
 	[SerializeField]
-	Vector3 velocity_ = Vector3.zero;
+	Vector3 gravity = Vector3.zero;
+	// 動く際に計算されているベクトル
+	[SerializeField]
+	Vector3 moveVelocity = Vector3.zero;
+	// ジャンプベクトル
+	[SerializeField]
+	Vector3 jumpVelocity = Vector3.zero;
 
 	// 入力を受け取る
 	PlayerInputScript inputScript;
+	// 接地判定
+	PlayerGroundCheckScript groundCheckScript;
+
+	// ワイヤー挙動
+	// 名称も構造も後で変える
+	TestWire testWire;
 
 
 	// Start is called before the first frame update
 	void Start()
 	{
 		rb = gameObject.GetComponent<Rigidbody>();
+		rb.useGravity = false;
 		inputScript = gameObject.GetComponent<PlayerInputScript>();
+		groundCheckScript = gameObject.GetComponent<PlayerGroundCheckScript>();
+		testWire = gameObject.GetComponent<TestWire>();
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
+		// 入力をフラグ構造体へ
+		flags_.isInputMove = inputScript.isInputMove;
+		flags_.isInputJump = inputScript.isInputJump;
+		flags_.isGround = groundCheckScript.isGround;
+
+		// 地面にいるときにリセットをかける
+		if (flags_.isGround || testWire.isWirering)
+		{
+			gravity = Vector3.zero;
+			jumpVelocity = Vector3.zero;
+		}
+		// 重力を加算
+		gravity.y += Gravity;
+
 		// 移動処理
 		Move();
 		// ジャンプ処理
 		Jump();
 
+		// ここで全てのベクトルを合成して速度作成
+		Vector3 velocity = Vector3.zero;
+		velocity += gravity;
+		velocity += moveVelocity;
+		velocity += testWire.wireVelocity;
+		velocity += jumpVelocity;
+
+		// 速度に設定
+		rb.velocity = velocity;
+
 		// 動いた時に線を描画
-		if (inputScript.isInputMove)
-		{
-			Debug.DrawLine(transform.position, transform.position + inputScript.destinate * moveSpeed, Color.red);
-		}
-	}
-
-	private void OnCollisionStay(Collision collision)
-	{
-		// 床に当たっている時
-		if (collision.gameObject.tag == "Floor")
-		{
-			flags_.isGround = true;
-		}
-	}
-
-
-	private void OnCollisionExit(Collision collision)
-	{
-		// 床から離れた時
-		if (collision.gameObject.tag == "Floor")
-		{
-			flags_.isGround = false;
-		}
+		Debug.DrawLine(transform.position, transform.position + rb.velocity * 10.0f, Color.red);
 	}
 
 	private void Move()
 	{
 		// 移動させる
-		if (inputScript.isInputMove)
+		if (flags_.isInputMove)
 		{
-			// 横移動を計測
-			Vector3 vel = rb.velocity;
+			// y 成分を抜いた値で計算
+			Vector3 vel = moveVelocity;
 			vel.y = 0.0f;
 			// 地面
 			if (flags_.isGround)
@@ -95,7 +131,7 @@ public class PlayerScript : MonoBehaviour
 				// 速度制限を設ける
 				if (vel.magnitude < MaxMoveSpeed)
 				{
-					velocity_ = inputScript.destinate * moveSpeed;
+					moveVelocity = inputScript.destinate * moveSpeed;
 				}
 			}
 			// 空中
@@ -104,27 +140,57 @@ public class PlayerScript : MonoBehaviour
 				// 速度制限を設ける
 				if (vel.magnitude < MaxAirSpeed)
 				{
-					velocity_ = inputScript.destinate * airSpeed;
+					moveVelocity = inputScript.destinate * airSpeed;
 				}
 			}
-			velocity_.y = rb.velocity.y;
+			vel = rb.velocity;
+			vel.y = 0.0f;
+			inputScript.destinate = vel.normalized;
 		}
-		else
+		// 速度を緩める
+		moveVelocity = moveVelocity * 0.98f;
+		// 速度を消す
+		if (moveVelocity.magnitude < 1.0f)
 		{
-			velocity_.x = 0.0f;
-			velocity_.z = 0.0f;
-			velocity_.y = rb.velocity.y;
+			moveVelocity = Vector3.zero;
 		}
-		rb.velocity = velocity_;
+		// 向いている方向を設定
 		transform.LookAt(transform.position + inputScript.destinate);
-
 	}
+
+	// ジャンプした元の位置を保存
+	private float jumpPosition = 0.0f;
+
 	private void Jump()
 	{
-		if (inputScript.isInputJump && flags_.isGround)
+		if (flags_.isInputJump && flags_.isGround)
 		{
-			rb.velocity = new Vector3(rb.velocity.x, 0.0f, rb.velocity.z);
-			rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+			// ポジション保存
+			jumpPosition = transform.position.y;
+			flags_.isJumping = true;
+			// ベクトル加算
+			jumpVelocity.y = jumpPower;
+		}
+		// ジャンプしていて
+		if (flags_.isJumping)
+		{
+			// 目的の高さまで上昇した時
+			if (jumpPosition + MaxHeight < transform.position.y)
+			{
+				// ジャンプした情報を消す
+				flags_.isJumping = false;
+				jumpVelocity.y = hoveringPower;
+			}
+		}
+
+		// 上昇中でない時
+		if (!flags_.isJumping)
+		{
+			// 地面にいる時
+			if (flags_.isGround)
+			{
+				jumpVelocity = Vector3.zero;
+			}
 		}
 	}
 }

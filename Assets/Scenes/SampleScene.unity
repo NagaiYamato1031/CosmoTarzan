@@ -516,6 +516,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 178934098}
   offset: {x: 0, y: 0, z: 0}
+--- !u!1 &1067358748 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8730817827050297175, guid: 7ad1c5df3e1eafd4f89a1f343ea1c5ce, type: 3}
+  m_PrefabInstance: {fileID: 1310679617}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1067358749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1067358748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 452948eca683dc84c83aaa57abec046d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wirePoint: {fileID: 8076914663719041951, guid: b8b4d7ba72949164295e77d971892c4a, type: 3}
+  wireVelocity: {x: 0, y: 0, z: 0}
+  isWirering: 0
+  MaxLength: 40
+  inRangePower: 50
+  outRangePower: 100
+  isOutRange: 0
+  offset: {x: 0, y: 10, z: 0}
 --- !u!1001 &1310679617
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -526,6 +551,30 @@ PrefabInstance:
     - target: {fileID: 2701229976546711707, guid: 7ad1c5df3e1eafd4f89a1f343ea1c5ce, type: 3}
       propertyPath: IsCollided
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6155772752791344203, guid: 7ad1c5df3e1eafd4f89a1f343ea1c5ce, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6973564928805756226, guid: 7ad1c5df3e1eafd4f89a1f343ea1c5ce, type: 3}
+      propertyPath: Gravity
+      value: -0.98
+      objectReference: {fileID: 0}
+    - target: {fileID: 6973564928805756226, guid: 7ad1c5df3e1eafd4f89a1f343ea1c5ce, type: 3}
+      propertyPath: MaxHeight
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6973564928805756226, guid: 7ad1c5df3e1eafd4f89a1f343ea1c5ce, type: 3}
+      propertyPath: jumpPower
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 6973564928805756226, guid: 7ad1c5df3e1eafd4f89a1f343ea1c5ce, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6973564928805756226, guid: 7ad1c5df3e1eafd4f89a1f343ea1c5ce, type: 3}
+      propertyPath: hoveringPower
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8730817827050297130, guid: 7ad1c5df3e1eafd4f89a1f343ea1c5ce, type: 3}
       propertyPath: m_Material

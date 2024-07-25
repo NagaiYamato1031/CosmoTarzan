@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8730817827050297131}
   - component: {fileID: 4455791180886190163}
   - component: {fileID: 8730817827050297134}
+  - component: {fileID: 153599602038320716}
   - component: {fileID: 6155772752791344203}
   - component: {fileID: 6973564928805756226}
   m_Layer: 0
@@ -94,7 +95,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8730817827050297175}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: bd8a690a9a846ce46acf47339fa3d80a, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
@@ -117,6 +118,19 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 1
+--- !u!114 &153599602038320716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8730817827050297175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 866fb1895053f0843bd728ad98de6952, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGround: 0
 --- !u!114 &6155772752791344203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,6 +166,11 @@ MonoBehaviour:
   jumpPower: 20
   airSpeed: 20
   MaxAirSpeed: 30
+  MaxHeight: 0
+  hoveringPower: 0
   flags_:
+    isInputMove: 0
+    isInputJump: 0
     isGround: 0
+    isJumping: 0
   velocity_: {x: 0, y: 0, z: 0}

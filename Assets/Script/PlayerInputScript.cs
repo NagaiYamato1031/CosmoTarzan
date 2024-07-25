@@ -23,9 +23,14 @@ public class PlayerInputScript : MonoBehaviour
 	// 下がり始めたら検知できるように値を格納する
 	[SerializeField]
 	private Vector2 prevAxis = Vector2.zero;
-	// 前回の入力値との差を格納
-	[SerializeField]
-	private Vector2 prevCollect = Vector2.zero;
+
+	// 接地判定
+	//private PlayerGroundCheckScript groundCheckScript;
+
+	private void Start()
+	{
+		//groundCheckScript = gameObject.GetComponent<PlayerGroundCheckScript>();
+	}
 
 	// 移動入力を計算
 	void Update()
@@ -41,51 +46,52 @@ public class PlayerInputScript : MonoBehaviour
 	private void CheckInputMove()
 	{
 		Vector3 direct;
-
-		// スティック入力を受け取る
+		// スティック入力も受け取る
 		// 横方向
 		Vector2 axis = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+		Vector2 tmp = axis;
 		// 大きさを取る
-		if (-deadZone < axis.x && axis.x < deadZone &&
-			(axis.x <= prevCollect.x || prevCollect.x <= axis.x))
+		// デッドゾーン以下の時
+		if (-deadZone < axis.x && axis.x < deadZone)
+		{
+			tmp.x = 0.0f;
+			axis.x = 0.0f;
+		}
+		// 前回の入力より絶対値が小さい時
+		else if ((axis.x < 0.0f ? -axis.x : axis.x) < (prevAxis.x < 0.0f ? -prevAxis.x : prevAxis.x))
 		{
 			axis.x = 0.0f;
 		}
-		// 左右
-		Vector3 moveX = Camera.main.transform.right * axis.x;
 		// 縦方向
-		// 大きさを取る
-		if (-deadZone < axis.y && axis.y < deadZone &&
-			(axis.y <= prevCollect.y || prevCollect.y <= axis.y))
+		if (-deadZone < axis.y && axis.y < deadZone)
+		{
+			tmp.y = 0.0f;
+			axis.y = 0.0f;
+		}
+		else if ((axis.y < 0.0f ? -axis.y : axis.y) < (prevAxis.y < 0.0f ? -prevAxis.y : prevAxis.y))
 		{
 			axis.y = 0.0f;
 		}
+		// 値を取得
+		prevAxis = tmp;
+		// 方向が入力されていない時
+		if (axis.Equals(Vector3.zero))
+		{
+			isInputMove = false;
+			return;
+		}
+		// 左右
+		Vector3 moveX = Camera.main.transform.right * axis.x;
 		// 前後
 		Vector3 moveZ = Camera.main.transform.forward * axis.y;
 
-		// 前回の入力値との差を保存する
-		prevCollect = axis - prevAxis;
-		// 値を取得
-		prevAxis = axis;
-
-		//moveX.Normalize();
-		//moveZ.Normalize();
 		// ベクトル合算
 		direct = moveX + moveZ;
 		direct.y = 0;
-		direct.Normalize();
 
-		// 方向が入力されている時
-		if (direct.Equals(Vector3.zero))
-		{
-			isInputMove = false;
-		}
-		else
-		{
-			// 情報を格納
-			destinate = direct;
-			isInputMove = true;
-		}
+		// 情報を格納
+		destinate = direct.normalized;
+		isInputMove = true;
 	}
 
 	private void CheckInputJump()
