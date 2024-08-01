@@ -417,6 +417,50 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &782628375
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 782628376}
+  - component: {fileID: 782628377}
+  m_Layer: 0
+  m_Name: GameManagaer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &782628376
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782628375}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &782628377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782628375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b57e8b44fdc12d94581a84ac62580750, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -537,8 +581,8 @@ MonoBehaviour:
   wireVelocity: {x: 0, y: 0, z: 0}
   isWirering: 0
   MaxLength: 40
-  inRangePower: 50
-  outRangePower: 100
+  inRangePower: 25
+  outRangePower: 50
   isOutRange: 0
   offset: {x: 0, y: 10, z: 0}
 --- !u!1001 &1310679617
@@ -566,7 +610,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6973564928805756226, guid: 7ad1c5df3e1eafd4f89a1f343ea1c5ce, type: 3}
       propertyPath: jumpPower
-      value: 200
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6973564928805756226, guid: 7ad1c5df3e1eafd4f89a1f343ea1c5ce, type: 3}
       propertyPath: m_Enabled
@@ -574,7 +618,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6973564928805756226, guid: 7ad1c5df3e1eafd4f89a1f343ea1c5ce, type: 3}
       propertyPath: hoveringPower
-      value: 100
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8730817827050297130, guid: 7ad1c5df3e1eafd4f89a1f343ea1c5ce, type: 3}
       propertyPath: m_Material

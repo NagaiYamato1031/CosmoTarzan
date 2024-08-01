@@ -93,8 +93,15 @@ public class PlayerScript : MonoBehaviour
 		if (flags_.isGround || testWire.isWirering)
 		{
 			gravity = Vector3.zero;
+			//jumpVelocity = Vector3.zero;
+		}
+		// ワイヤー中は重力を受けないようにする
+		if (testWire.isWirering)
+		{
+			gravity = Vector3.zero;
 			jumpVelocity = Vector3.zero;
 		}
+
 		// 重力を加算
 		gravity.y += Gravity;
 
