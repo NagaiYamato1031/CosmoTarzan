@@ -70,6 +70,9 @@ public class PlayerScript : MonoBehaviour
 	// 名称も構造も後で変える
 	TestWire testWire;
 
+	// 追加で作成する
+	// 最初からつけておけばいいと思う
+	HPScript hpScript;
 
 	// Start is called before the first frame update
 	void Start()
@@ -79,6 +82,8 @@ public class PlayerScript : MonoBehaviour
 		inputScript = gameObject.GetComponent<PlayerInputScript>();
 		groundCheckScript = gameObject.GetComponent<PlayerGroundCheckScript>();
 		testWire = gameObject.GetComponent<TestWire>();
+		// 試験的にここで機能を追加する
+		hpScript = gameObject.AddComponent<HPScript>();
 	}
 
 	// Update is called once per frame
@@ -126,6 +131,13 @@ public class PlayerScript : MonoBehaviour
 
 	private void Move()
 	{
+		// 速度を緩める
+		moveVelocity = moveVelocity * 0.98f;
+		// 速度を消す
+		if (moveVelocity.magnitude < 1.0f || flags_.isGround)
+		{
+			moveVelocity = Vector3.zero;
+		}
 		// 移動させる
 		if (flags_.isInputMove)
 		{
@@ -153,13 +165,6 @@ public class PlayerScript : MonoBehaviour
 			vel = rb.velocity;
 			vel.y = 0.0f;
 			inputScript.destinate = vel.normalized;
-		}
-		// 速度を緩める
-		moveVelocity = moveVelocity * 0.98f;
-		// 速度を消す
-		if (moveVelocity.magnitude < 1.0f)
-		{
-			moveVelocity = Vector3.zero;
 		}
 		// 向いている方向を設定
 		transform.LookAt(transform.position + inputScript.destinate);
