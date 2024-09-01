@@ -22,6 +22,25 @@ public class FollowCameraScript : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		// ESC キーが押された時
+		if (Input.GetKeyDown(KeyCode.Escape))
+		{
+			Cursor.lockState = CursorLockMode.None;
+			Cursor.visible = true;
+		}
+		// 左クリックしたとき
+		else if (Input.GetMouseButtonDown(0))
+		{
+			Cursor.lockState = CursorLockMode.Locked;
+			Cursor.visible = false;
+		}
+
+		// カーソルが見えている時は更新しない
+		if (Cursor.visible)
+		{
+			return;
+		}
+
 
 		float mx = Input.GetAxis("Mouse X");
 		float my = Input.GetAxis("Mouse Y");
@@ -41,5 +60,6 @@ public class FollowCameraScript : MonoBehaviour
 		}
 		// プレイヤーに追従させる
 		transform.position = player.position - transform.forward * offset.magnitude;
+
 	}
 }
